@@ -75,7 +75,7 @@ public class ConsoleMenuOrchestrator
                     break;
                 case "5":
                     var resRepo = new ReservationsRepository(context);
-                    var resService = new ReservationsServices(resRepo);
+                    var resService = new ReservationsServices(resRepo, context);
                     await new ReservationsMenu(resService).ShowMenuAsync();
                     break;
                 case "6":

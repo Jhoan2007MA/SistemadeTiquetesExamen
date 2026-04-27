@@ -23,7 +23,9 @@ public class ReservationsMenu
             Console.WriteLine("2. Crear nueva reserva");
             Console.WriteLine("3. Actualizar estado de reserva");
             Console.WriteLine("4. Eliminar reserva");
-            Console.WriteLine("5. Volver");
+            Console.WriteLine("5. Reprogramar reserva");
+            Console.WriteLine("6. Agregar a lista de espera");
+            Console.WriteLine("7. Volver");
             Console.WriteLine("=========================================");
             Console.Write("Seleccione: ");
 
@@ -33,7 +35,9 @@ public class ReservationsMenu
                 case "2": await CreateReservationAsync(); break;
                 case "3": await UpdateReservationAsync(); break;
                 case "4": await DeleteReservationAsync(); break;
-                case "5": isRunning = false; break;
+                case "5": await RescheduleReservationAsync(); break;
+                case "6": await AddToWaitlistAsync(); break;
+                case "7": isRunning = false; break;
             }
         }
     }
@@ -88,6 +92,41 @@ public class ReservationsMenu
         if (Guid.TryParse(Console.ReadLine(), out Guid id)) {
             await _services.DeleteAsync(id);
             Console.WriteLine("Borrado.");
+        }
+        Console.ReadKey();
+    }
+
+    private async Task RescheduleReservationAsync()
+    {
+        Console.Write("ID de la reserva a reprogramar: ");
+        if (Guid.TryParse(Console.ReadLine(), out Guid resId)) {
+            Console.Write("ID del nuevo vuelo: ");
+            if (Guid.TryParse(Console.ReadLine(), out Guid newFlightId)) {
+                Console.Write("Motivo de reprogramación: ");
+                string reason = Console.ReadLine() ?? "Sin motivo";
+
+                try {
+                    bool success = await _services.RescheduleAsync(resId, newFlightId, reason);
+                    if (success) Console.WriteLine("Reserva reprogramada exitosamente.");
+                    else Console.WriteLine("No se pudo reprogramar. Verifique que la ruta sea compatible y que haya cupo.");
+                } catch(Exception e) { Console.WriteLine($"Error: {e.Message}"); }
+            }
+        }
+        Console.ReadKey();
+    }
+
+    private async Task AddToWaitlistAsync()
+    {
+        Console.Write("ID de la reserva: ");
+        if (Guid.TryParse(Console.ReadLine(), out Guid resId)) {
+            Console.Write("ID del vuelo lleno: ");
+            if (Guid.TryParse(Console.ReadLine(), out Guid flightId)) {
+                try {
+                    bool success = await _services.AddToWaitlistAsync(resId, flightId);
+                    if (success) Console.WriteLine("Agregado a la lista de espera.");
+                    else Console.WriteLine("No se pudo agregar a la lista de espera.");
+                } catch(Exception e) { Console.WriteLine($"Error: {e.Message}"); }
+            }
         }
         Console.ReadKey();
     }

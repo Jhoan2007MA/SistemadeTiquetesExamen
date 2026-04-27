@@ -37,6 +37,8 @@ public static class AppDbContextSeedData
     private static readonly Guid IdTkStCancel = new("a1000000-0000-0000-0000-000000000051");
     private static readonly Guid IdRvStPend = new("a1000000-0000-0000-0000-000000000060");
     private static readonly Guid IdRvStConf = new("a1000000-0000-0000-0000-000000000061");
+    public static readonly Guid IdRvStReprog = new("a1000000-0000-0000-0000-000000000062");
+    public static readonly Guid IdRvStWait = new("a1000000-0000-0000-0000-000000000063");
     private static readonly Guid IdPmCard = new("a1000000-0000-0000-0000-000000000070");
     private static readonly Guid IdPmCash = new("a1000000-0000-0000-0000-000000000071");
     private static readonly Guid IdCustomer1 = new("a1000000-0000-0000-0000-000000000080");
@@ -138,7 +140,9 @@ public static class AppDbContextSeedData
 
         modelBuilder.Entity<ReservationStatusEntity>().HasData(
             new ReservationStatusEntity { Id = IdRvStPend, Name = "Pendiente" },
-            new ReservationStatusEntity { Id = IdRvStConf, Name = "Confirmada" });
+            new ReservationStatusEntity { Id = IdRvStConf, Name = "Confirmada" },
+            new ReservationStatusEntity { Id = IdRvStReprog, Name = "Reprogramada" },
+            new ReservationStatusEntity { Id = IdRvStWait, Name = "En espera" });
 
         /*
         modelBuilder.Entity<PaymentMethodEntity>().HasData(
@@ -187,7 +191,10 @@ public static class AppDbContextSeedData
             {
                 Id = IdFlight1,
                 FlightNumber = "AV0101",
-                StatusId = IdFlStProg
+                StatusId = IdFlStProg,
+                Origin = "BOG",
+                Destination = "MIA",
+                DepartureDate = SampleDate.AddDays(1)
             });
 
         /*

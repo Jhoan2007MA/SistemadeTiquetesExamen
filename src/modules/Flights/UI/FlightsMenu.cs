@@ -43,7 +43,7 @@ public class FlightsMenu
         Console.Clear();
         var list = await _services.GetAllAsync();
         foreach (var f in list) 
-            Console.WriteLine($"- ID: {f.Id} | Número: {f.FlightNumber} | StatusID: {f.StatusId}");
+            Console.WriteLine($"- ID: {f.Id} | Número: {f.FlightNumber} | StatusID: {f.StatusId} | Origen: {f.Origin} | Destino: {f.Destination} | Fecha: {f.DepartureDate:yyyy-MM-dd HH:mm}");
         Console.WriteLine("\nPresione tecla para continuar...");
         Console.ReadKey();
     }
@@ -52,10 +52,21 @@ public class FlightsMenu
     {
         Console.Write("Número de vuelo (ej: AV123): ");
         string number = Console.ReadLine() ?? "";
+        Console.Write("Origen (ej: BOG): ");
+        string origin = Console.ReadLine() ?? "";
+        Console.Write("Destino (ej: MIA): ");
+        string destination = Console.ReadLine() ?? "";
+        Console.Write("Fecha y hora de salida (ej: 2026-05-01 14:30): ");
+        if (!DateTime.TryParse(Console.ReadLine(), out DateTime departureDate)) {
+            Console.WriteLine("Fecha inválida.");
+            Console.ReadKey();
+            return;
+        }
+
         Console.Write("ID del Estado (GUID): ");
         if (Guid.TryParse(Console.ReadLine(), out Guid statusId)) {
             try {
-                var flight = Flight.Create(number, statusId);
+                var flight = Flight.Create(number, statusId, origin, destination, departureDate);
                 await _services.CreateAsync(flight);
                 Console.WriteLine("Vuelo creado.");
             } catch(Exception e) { Console.WriteLine(e.Message); }
@@ -73,12 +84,24 @@ public class FlightsMenu
                 string newNumber = Console.ReadLine() ?? "";
                 if (string.IsNullOrWhiteSpace(newNumber)) newNumber = flight.FlightNumber;
                 
+                Console.Write($"Nuevo Origen [{flight.Origin}]: ");
+                string newOrigin = Console.ReadLine() ?? "";
+                if (string.IsNullOrWhiteSpace(newOrigin)) newOrigin = flight.Origin;
+
+                Console.Write($"Nuevo Destino [{flight.Destination}]: ");
+                string newDestination = Console.ReadLine() ?? "";
+                if (string.IsNullOrWhiteSpace(newDestination)) newDestination = flight.Destination;
+
+                Console.Write($"Nueva Fecha [{flight.DepartureDate:yyyy-MM-dd HH:mm}]: ");
+                string dateIn = Console.ReadLine() ?? "";
+                DateTime newDate = string.IsNullOrWhiteSpace(dateIn) ? flight.DepartureDate : (DateTime.TryParse(dateIn, out DateTime d) ? d : flight.DepartureDate);
+
                 Console.Write($"Nuevo ID de Estado [{flight.StatusId}]: ");
                 string statusIn = Console.ReadLine() ?? "";
                 Guid statusId = string.IsNullOrWhiteSpace(statusIn) ? flight.StatusId : (Guid.TryParse(statusIn, out Guid sId) ? sId : flight.StatusId);
 
                 try {
-                    flight.UpdateDetails(newNumber, statusId);
+                    flight.UpdateDetails(newNumber, statusId, newOrigin, newDestination, newDate);
                     await _services.UpdateAsync(flight);
                     Console.WriteLine("Actualizado.");
                 } catch(Exception e) { Console.WriteLine(e.Message); }

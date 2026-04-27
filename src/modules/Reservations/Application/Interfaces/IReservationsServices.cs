@@ -12,4 +12,6 @@ public interface IReservationsServices
     Task<Reservation> CreateAsync(Reservation reservation);
     Task UpdateAsync(Reservation reservation);
     Task DeleteAsync(Guid id);
+    Task<bool> RescheduleAsync(Guid reservationId, Guid newFlightId, string reason);
+    Task<bool> AddToWaitlistAsync(Guid reservationId, Guid flightId);
 }
