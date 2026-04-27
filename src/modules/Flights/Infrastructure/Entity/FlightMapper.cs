@@ -12,7 +12,10 @@ public static class FlightMapper
         {
             Id = aggregate.Id,
             FlightNumber = aggregate.FlightNumber,
-            StatusId = aggregate.StatusId
+            StatusId = aggregate.StatusId,
+            Origin = aggregate.Origin,
+            Destination = aggregate.Destination,
+            DepartureDate = aggregate.DepartureDate
         };
     }
 
@@ -22,6 +25,9 @@ public static class FlightMapper
         typeof(Flight).GetProperty("Id")?.SetValue(aggregate, entity.Id);
         typeof(Flight).GetProperty("FlightNumber")?.SetValue(aggregate, entity.FlightNumber);
         typeof(Flight).GetProperty("StatusId")?.SetValue(aggregate, entity.StatusId);
+        typeof(Flight).GetProperty("Origin")?.SetValue(aggregate, entity.Origin);
+        typeof(Flight).GetProperty("Destination")?.SetValue(aggregate, entity.Destination);
+        typeof(Flight).GetProperty("DepartureDate")?.SetValue(aggregate, entity.DepartureDate);
         return aggregate;
     }
 }

@@ -18,6 +18,7 @@ using SistemadeTiquetess.src.modules.SeatAvailability.Infrastructure.Entity;
 using SistemadeTiquetess.src.modules.Seats.Infrastructure.Entity;
 // using SistemadeTiquetess.src.modules.Tickets.Infrastructure.Entity;
 using SistemadeTiquetess.src.modules.TicketStatus.Infrastructure.Entity;
+using SistemadeTiquetess.src.modules.Reservations.Infrastructure.Entity;
 
 namespace SistemadeTiquetess.src.shared.context;
 
@@ -46,6 +47,8 @@ public class AppDbContext : DbContext
     // public DbSet<SeatAvailabilityEntity> SeatAvailabilities => Set<SeatAvailabilityEntity>();
     // public DbSet<TicketEntity> Tickets => Set<TicketEntity>();
     // public DbSet<TicketStatusEntity> TicketStatuses => Set<TicketStatusEntity>();
+    public DbSet<WaitlistEntity> Waitlists => Set<WaitlistEntity>();
+    public DbSet<RescheduleHistoryEntity> RescheduleHistories => Set<RescheduleHistoryEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
